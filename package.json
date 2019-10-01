@@ -1,0 +1,73 @@
+{
+  "name": "@byu-oit/ts-wso2-claims-request",
+  "version": "0.0.0",
+  "description": "WSO2 request integration with claims engine client in TypeScript",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "lint": "tslint -p tsconfig.json -t stylish --fix",
+    "build": "tsc",
+    "test": "nyc mocha -r ts-node/register ./test/**/*-test.ts",
+    "coverage": "nyc report --reporter=text-lcov | coveralls"
+  },
+  "nyc": {
+    "include": [
+      "lib/**/*.ts"
+    ],
+    "extension": [
+      ".ts"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "reporter": [
+      "text-summary",
+      "html"
+    ],
+    "sourceMap": true,
+    "instrument": true
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/byu-oit/ts-wso2-claims-request.git"
+  },
+  "keywords": [
+    "claims",
+    "adjudicator",
+    "engine",
+    "client",
+    "wso2",
+    "request",
+    "typescript"
+  ],
+  "author": "Spencer Tuft <spencer_tuft@byu.edu>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/byu-oit/ts-wso2-claims-request/issues"
+  },
+  "homepage": "https://github.com/byu-oit/ts-wso2-claims-request#readme",
+  "devDependencies": {
+    "@types/chai": "^4.2.3",
+    "@types/mocha": "^5.2.7",
+    "@types/node": "^12.7.8",
+    "@types/request-promise": "^4.1.44",
+    "@types/sinon": "^7.0.13",
+    "chai": "^4.2.0",
+    "coveralls": "^3.0.6",
+    "mocha": "^6.2.0",
+    "nyc": "^14.1.1",
+    "sinon": "^7.5.0",
+    "source-map-support": "^0.5.13",
+    "ts-node": "^8.3.0",
+    "tslint": "^5.19.0",
+    "typescript": "^3.6.3"
+  },
+  "dependencies": {
+    "@byu-oit/ts-claims-engine-client": "^1.1.2",
+    "@byu-oit/wso2-request": "^1.0.1"
+  }
+}
