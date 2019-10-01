@@ -36,7 +36,7 @@ export default class AssertionWSO2RequestClient extends AssertionsClient {
             }
         }, options);
         this.response = await AssertionWSO2RequestClient.makeRequest(options, originalJWT);
-        return this.response;
+        return this;
     };
 
     public verify = async (options?: RequestPromiseOptions, originalJWT?: string) => {
@@ -53,6 +53,6 @@ export default class AssertionWSO2RequestClient extends AssertionsClient {
             body: this.assertions
         }, options);
         this.response = await AssertionWSO2RequestClient.makeRequest(options, originalJWT);
-        return this.response;
+        return this;
     };
 }

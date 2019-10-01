@@ -67,7 +67,7 @@
     "typescript": "^3.6.3"
   },
   "dependencies": {
-    "@byu-oit/ts-claims-engine-client": "^1.1.2",
+    "@byu-oit/ts-claims-engine-client": "^1.1.3",
     "@byu-oit/wso2-request": "^1.0.1"
   }
 }
