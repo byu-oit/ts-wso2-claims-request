@@ -1,58 +1,50 @@
-import {RequestPromiseOptions} from 'request-promise'
-import AssertionsClient from '@byu-oit/ts-claims-engine-client';
-import * as wso2 from '@byu-oit/wso2-request';
+import {AdjudicatorClient, AssertionClientParams} from '@byu-oit/ts-claims-engine-client';
+import * as wso2 from 'byu-wso2-request';
+import {RequestPromiseOptions} from 'request-promise';
 
-export default class AssertionWSO2RequestClient extends AssertionsClient {
-    static makeRequest = (options: RequestPromiseOptions, originalJWT?: string) => {
-        // The type definition file defines multiple request functions instead of a
-        // single function with a potentially undefined parameter.
-        if (originalJWT) {
-            return wso2.request(options, originalJWT);
-        }
-        return wso2.request(options);
+export interface AdjudicatorWSO2RequestClientParams {
+    url: string;
+    request?: RequestPromiseOptions;
+}
+
+const defaultOptions = {
+    json: true,
+    simple: false,
+    encoding: 'utf8',
+    headers: {
+        Accept: 'application/json'
+    }
+};
+
+export class AdjudicatorWSO2RequestClient extends AdjudicatorClient {
+
+    public static setOauthSettings = wso2.setOauthSettings;
+
+    public static request = wso2.request;
+    private static getInfoOptions = (url: string, requestOptions: RequestPromiseOptions = {}) => {
+        return Object.assign(defaultOptions, requestOptions, {url, method: 'GET'});
     };
 
-    private readonly URL: string;
-    public response: any = null;
+    private static getVerifyOptions = (assertions: any, url: string, requestOptions: RequestPromiseOptions = {}) => {
+        return Object.assign(defaultOptions, requestOptions, {url, method: 'PUT', body: assertions});
+    };
 
-    constructor(claimsUrl: string, settings?: wso2.OauthSettings) {
-        super();
-        this.URL = claimsUrl;
-        if (settings) {
-            wso2.setOauthSettings(settings);
-        }
+    private readonly url: string;
+    private readonly requestOptions?: RequestPromiseOptions;
+
+    constructor(config: AdjudicatorWSO2RequestClientParams, assertionParams?: AssertionClientParams) {
+        super(assertionParams);
+        this.url = config.url;
+        this.requestOptions = config.request;
     }
 
-    public info = async (options?: RequestPromiseOptions, originalJWT?: string) => {
-        options = Object.assign({
-            url: this.URL,
-            method: 'GET',
-            json: true,
-            resolveWithFullResponse: true,
-            simple: false,
-            encoding: 'utf8',
-            headers: {
-                Accept: 'application/json'
-            }
-        }, options);
-        this.response = await AssertionWSO2RequestClient.makeRequest(options, originalJWT);
-        return this;
+    public info = async () => {
+        const options = AdjudicatorWSO2RequestClient.getInfoOptions(this.url, this.requestOptions);
+        return AdjudicatorWSO2RequestClient.request(options);
     };
 
-    public verify = async (options?: RequestPromiseOptions, originalJWT?: string) => {
-        options = Object.assign({
-            url: this.URL,
-            method: 'POST',
-            json: true,
-            resolveWithFullResponse: true,
-            simple: false,
-            encoding: 'utf8',
-            headers: {
-                Accept: 'application/json'
-            },
-            body: this.assertions
-        }, options);
-        this.response = await AssertionWSO2RequestClient.makeRequest(options, originalJWT);
-        return this;
+    public verify = async (assertions?: any) => {
+        const options = AdjudicatorWSO2RequestClient.getVerifyOptions(assertions || this.assertion, this.url, this.requestOptions);
+        return AdjudicatorWSO2RequestClient.request(options);
     };
 }
